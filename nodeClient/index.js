@@ -2,6 +2,37 @@
 Runs on user pc and computes required data and sends it to make socket server
 */
 const os = require("os");
+const io = require("socket.io-client");
+let socket = io("http://127.0.0.1:8181");
+
+socket.on("connect", () => {
+  const nI = os.networkInterfaces();
+  let macA;
+  for (let key in nI) {
+    if (!nI[key][0].internal) {
+      macA = nI[key][0].mac;
+      break;
+    }
+  }
+  // semd some jibberish auth token
+  socket.emit("clientAuth", "skjdfbasdfasdfbew");
+
+  // initial send and identification
+  getPerformanceData().then((allPerformanceData) => {
+    allPerformanceData.macA = macA;
+    socket.emit("initPerfData", allPerformanceData);
+  });
+
+  let perfDataInterval = setInterval(() => {
+    getPerformanceData().then((allPerformanceData) => {
+      socket.emit("perfData", allPerformanceData);
+    });
+  }, 1000);
+
+  socket.on("disconnect", () => {
+    clearInterval(perfDataInterval);
+  });
+});
 
 function getPerformanceData() {
   return new Promise(async (resolve, reject) => {
@@ -60,7 +91,3 @@ function getCpuLoad() {
     }, 100);
   });
 }
-
-getPerformanceData().then((allPerformanceData) => {
-  console.log(allPerformanceData);
-});

@@ -66,7 +66,7 @@ if (cluster.isMaster) {
 
   // Don't expose our internal server to the outside world.
   const server = app.listen(0, "localhost");
-  console.log("Worker listening...");
+  // console.log("Worker listening...");
 
   const io = socketio(server);
 
@@ -80,7 +80,7 @@ if (cluster.isMaster) {
   // on connection, send the socket over to our module with socket stuff
   io.on("connection", function (socket) {
     socketMain(io, socket);
-    // console.log(`connected to worker: ${cluster.worker.id}`);
+    console.log(`connected to worker: ${cluster.worker.id}`);
   });
 
   // Listen to messages sent from the master. Ignore everything else.

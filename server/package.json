@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "farmhash": "^3.2.1",
     "helmet": "^4.6.0",
+    "mongoose": "^5.13.2",
     "socket.io": "^4.1.2",
     "socket.io-redis": "^6.1.1"
   }

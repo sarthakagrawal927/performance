@@ -1,11 +1,8 @@
 const express = require("express");
 const cluster = require("cluster");
 const net = require("net");
-const http = require("http");
 const socketio = require("socket.io");
-const helmet = require("helmet");
 const socketMain = require("./socketMain");
-const cors = require("cors");
 const io_redis = require("socket.io-redis");
 const farmhash = require("farmhash");
 // const expressMain = require('./expressMain');
@@ -58,8 +55,6 @@ if (cluster.isMaster) {
 } else {
   // Note we don't use a port here because the master listens on it for us.
   let app = express();
-  app.use(helmet());
-  app.use(cors());
   // Don't expose our internal server to the outside world.
   const server = app.listen(0, "localhost");
   // console.log("Worker listening...");

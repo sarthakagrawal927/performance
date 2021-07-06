@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  cors: ^2.8.5
   express: ^4.17.1
   farmhash: ^3.2.1
   helmet: ^4.6.0
@@ -9,6 +10,7 @@ specifiers:
   socket.io-redis: ^6.1.1
 
 dependencies:
+  cors: 2.8.5
   express: 4.17.1
   farmhash: 3.2.1
   helmet: 4.6.0

@@ -13,6 +13,7 @@ function socketMain(io, socket) {
       socket.join("clients");
     } else if (key === "sadasd") {
       socket.join("ui");
+      console.log("react client ");
     } else {
       socket.disconnect(true);
     }
@@ -26,7 +27,8 @@ function socketMain(io, socket) {
   });
 
   socket.on("perfData", (data) => {
-    // console.log(data);
+    console.log(data);
+    io.to("ui").emit("data", data);
   });
 }
 

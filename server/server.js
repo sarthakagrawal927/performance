@@ -1,34 +1,29 @@
 const express = require("express");
 const cluster = require("cluster");
 const net = require("net");
+const http = require("http");
 const socketio = require("socket.io");
 const helmet = require("helmet");
 const socketMain = require("./socketMain");
+const cors = require("cors");
+const io_redis = require("socket.io-redis");
+const farmhash = require("farmhash");
 // const expressMain = require('./expressMain');
 
 const port = 8181;
 const num_processes = require("os").cpus().length;
 
-const io_redis = require("socket.io-redis");
-const farmhash = require("farmhash");
-
 if (cluster.isMaster) {
-  // This stores our workers. We need to keep them to be able to reference
-  // them based on source IP address. It's also useful for auto-restart,
-  // for example.
   let workers = [];
 
-  // Helper function for spawning worker at index 'i'.
   let spawn = function (i) {
     workers[i] = cluster.fork();
 
     // Optional: Restart worker on exit
     workers[i].on("exit", function (code, signal) {
-      // console.log('respawning worker', i);
       spawn(i);
     });
   };
-
   // Spawn workers.
   for (var i = 0; i < num_processes; i++) {
     spawn(i);
@@ -57,18 +52,19 @@ if (cluster.isMaster) {
     let worker = workers[worker_index(connection.remoteAddress, num_processes)];
     worker.send("sticky-session:connection", connection);
   });
+
   server.listen(port);
   console.log(`Master listening on port ${port}`);
 } else {
   // Note we don't use a port here because the master listens on it for us.
   let app = express();
   app.use(helmet());
-
+  app.use(cors());
   // Don't expose our internal server to the outside world.
   const server = app.listen(0, "localhost");
   // console.log("Worker listening...");
 
-  const io = socketio(server);
+  const io = socketio(server, { origins: "*:*" });
 
   // Tell Socket.IO to use the redis adapter. By default, the redis
   // server is assumed to be on localhost:6379. You don't have to

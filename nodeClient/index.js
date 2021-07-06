@@ -9,6 +9,11 @@ socket.on("connect", () => {
   const nI = os.networkInterfaces();
   let macA;
   for (let key in nI) {
+    /*Test Code */
+    macA = Math.floor(Math.random() * 3) + 1;
+    break;
+    /*Test Code */
+
     if (!nI[key][0].internal) {
       macA = nI[key][0].mac;
       break;
@@ -49,7 +54,7 @@ function getPerformanceData() {
     const cpuModel = cpus[0].model;
     const cpuSpeed = cpus[0].speed;
     const numCores = cpus.length;
-
+    const isActive = true;
     const cpuLoad = await getCpuLoad();
     resolve({
       freeMem,
@@ -62,6 +67,7 @@ function getPerformanceData() {
       numCores,
       cpuSpeed,
       cpuLoad,
+      isActive,
     });
   });
 }

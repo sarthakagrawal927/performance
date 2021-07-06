@@ -8,7 +8,7 @@ function App() {
       setPerformance(data);
     });
   }, []);
-
+  console.log(performance);
   return (
     <div className='app'>
       <Widget performance={performance} />

@@ -6,7 +6,7 @@ const Mem = ({ mem }) => {
   const { totalMem, memUseage, freeMem, memWidgetId } = mem;
   const totalMemInGb = (totalMem / 1073741824).toFixed(2);
   const freeMemInGb = (freeMem / 1073741824).toFixed(2);
-  const canvas = document.querySelector(`${memWidgetId}`);
+  const canvas = document.querySelector(`.${memWidgetId}`);
 
   drawCircle(canvas, memUseage * 100);
 
